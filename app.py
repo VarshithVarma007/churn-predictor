@@ -2,11 +2,16 @@ import streamlit as st
 import pandas as pd
 import joblib
 import sqlite3
+import os
 
 st.set_page_config(page_title="Customer Churn Predictor", page_icon="📉", layout="centered")
 
 @st.cache_resource
 def load_model():
+    if not os.path.exists("churn_model.pkl"):
+        # First run on a fresh deployment: train the model now instead of failing.
+        from train_model import train
+        train()
     return joblib.load("churn_model.pkl")
 
 @st.cache_data
